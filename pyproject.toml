@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "immoscan"
+version = "0.1.0"
+description = ""
+authors = ["Nils"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.9.17"
+python-telegram-bot = "13"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.2"
+python-dotenv = "^1.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
