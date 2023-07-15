@@ -1,9 +1,8 @@
 name: Build and Push Docker image
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -22,7 +21,11 @@ jobs:
     - name: Build Docker image
       run: docker-compose build
 
+    - name: Extract release tag
+      id: release_tag
+      run: echo "::set-output name=version::${GITHUB_REF#refs/tags/}"
+
     - name: Push Docker image
       run: |
-        docker tag immoscan_app:latest ${{ secrets.DOCKERHUB_USERNAME }}/immoscan:0.1.1
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/immoscan:0.1.1
+        docker tag immoscan_app:latest ${{ secrets.DOCKERHUB_USERNAME }}/immoscan:${{ steps.release_tag.outputs.version }}
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/immoscan:${{ steps.release_tag.outputs.version }}
