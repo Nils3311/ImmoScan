@@ -18,14 +18,14 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    - name: Build Docker image
-      run: docker-compose build
-
     - name: Extract release tag
       id: release_tag
       run: echo "::set-output name=version::${GITHUB_REF#refs/tags/}"
 
-    - name: Push Docker image
-      run: |
-        docker tag immoscan_app:latest ${{ secrets.DOCKERHUB_USERNAME }}/immoscan:${{ steps.release_tag.outputs.version }}
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/immoscan:${{ steps.release_tag.outputs.version }}
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v4.1.1
+      with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/immoscan:${{ steps.release_tag.outputs.version }}
